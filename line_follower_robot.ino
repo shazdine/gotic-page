@@ -2,24 +2,19 @@
 
 // SENSOR INFRARED
 const int IR_KANAN = 11;  // Sensor kanan ke pin 11
-const int IR_KIRI  = 12;  // Sensor kiri ke pin 12 (pin 10 dipakai ENB)
-
-// Kebanyakan modul sensor garis digital aktif-LOW:
-// output LOW saat garis terdeteksi. Jika modul Anda output HIGH saat
-// mendeteksi garis, ubah LOW menjadi HIGH.
-const int LEVEL_GARIS = LOW;
+const int IR_KIRI  = 12;  // Sensor kiri ke pin 12
 
 // MOTOR 1 (KIRI) -> OUT1 / OUT2
-const int ENA = 9;
+const int ENA = 12;
 const int IN1 = 2;
 const int IN2 = 3;
 
 // MOTOR 2 (KANAN) -> OUT3 / OUT4
-const int ENB = 10;
+const int ENB = 11;
 const int IN3 = 4;
 const int IN4 = 5;
 
-// PENGATURAN KECEPATAN (rentang PWM 0-255)
+// PENGATURAN KECEPATAN
 const int KEC_LURUS = 220;
 const int KEC_BELOK = 200;
 const int KEC_PUTAR = 120;
@@ -67,30 +62,30 @@ void setup() {
 }
 
 void loop() {
-  bool garisKanan = (digitalRead(IR_KANAN) == LEVEL_GARIS);
-  bool garisKiri  = (digitalRead(IR_KIRI) == LEVEL_GARIS);
+  int kanan = digitalRead(IR_KANAN);
+  int kiri = digitalRead(IR_KIRI);
 
-  // KEDUA SENSOR TIDAK MENDETEKSI GARIS: maju
-  if (!garisKanan && !garisKiri) {
+  // KEDUA SENSOR TIDAK MENDETEKSI GARIS
+  if (kanan == 0 && kiri == 0) {
     motorKiri(KEC_LURUS);
     motorKanan(KEC_LURUS);
   }
 
-  // SENSOR KANAN MENDETEKSI GARIS: belok kanan
-  else if (garisKanan && !garisKiri) {
+  // SENSOR KANAN MENDETEKSI GARIS
+  else if (kanan == 1 && kiri == 0) {
     motorKiri(KEC_BELOK);
     motorKanan(KEC_PUTAR);
   }
 
-  // SENSOR KIRI MENDETEKSI GARIS: belok kiri
-  else if (!garisKanan && garisKiri) {
+  // SENSOR KIRI MENDETEKSI GARIS
+  else if (kanan == 0 && kiri == 1) {
     motorKiri(KEC_PUTAR);
     motorKanan(KEC_BELOK);
   }
 
-  // KEDUA SENSOR MENDETEKSI GARIS: tetap maju
+  // KEDUA SENSOR MENDETEKSI GARIS
   else {
-    motorKiri(KEC_LURUS);
-    motorKanan(KEC_LURUS);
+    motorKiri(0);
+    motorKanan(0);
   }
 }
