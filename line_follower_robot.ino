@@ -67,8 +67,6 @@ void setup() {
 }
 
 void loop() {
-  // Ubah pembacaan pin menjadi status deteksi garis, sehingga logika
-  // tetap mudah dipahami walaupun level aktif sensor berbeda.
   bool garisKanan = (digitalRead(IR_KANAN) == LEVEL_GARIS);
   bool garisKiri  = (digitalRead(IR_KIRI) == LEVEL_GARIS);
 
@@ -90,9 +88,9 @@ void loop() {
     motorKanan(KEC_BELOK);
   }
 
-  // KEDUA SENSOR MENDETEKSI GARIS
+  // KEDUA SENSOR MENDETEKSI GARIS: tetap maju
   else {
-    motorKiri(0);
-    motorKanan(0);
+    motorKiri(KEC_LURUS);
+    motorKanan(KEC_LURUS);
   }
 }
